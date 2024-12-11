@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitPlan Guide</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1d;
+            color: #c5c6c7;
+        }
+        header {
+            background-color: #333;
+            color: #66fcf1;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header nav {
+            display: flex;
+            gap: 15px;
+        }
+        header nav a {
+            color: #66fcf1;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        header nav a:hover {
+            text-decoration: underline;
+        }
+        main {
+            padding: 20px;
+        }
+        .site-title {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2em;
+            font-weight: bold;
+            color: #66fcf1;
+        }
+        .intro {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .intro img {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px auto;
+            background-color: #45a29e;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #66fcf1;
+        }
+        .calculator {
+            display: none;
+            text-align: center;
+        }
+        .section {
+            display: none;
+        }
+        .visible {
+            display: block;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #0b0c10;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+        }
+        .modal.visible {
+            display: block;
+        }
+        .modal h3 {
+            margin-bottom: 15px;
+            color: #66fcf1;
+        }
+        .modal ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .modal ul li {
+            margin-bottom: 10px;
+        }
+        .modal ul li strong {
+            color: #45a29e;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+        }
+        .overlay.visible {
+            display: block;
+        }
+        .plan-images img {
+            width: 300px;
+            height: 200px;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+        }
+        .plan-images {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>Fitness & Nutrition Planner</div>
+        <nav>
+            <a href="#" id="menuButton">Menu</a>
+            <a href="#">Home</a>
+            <a href="#calculatorSection">BMI Calculator</a>
+            <a href="#planSection" id="planTrigger">Plans</a>
+        </nav>
+    </header>
+
+    <div class="overlay" id="overlay"></div>
+
+    <div class="modal" id="planModal">
+        <h3>Select a Plan</h3>
+        <ul>
+            <li><strong>Weight Loss:</strong> A combination of cardio exercises (e.g., running, cycling) and a calorie deficit diet rich in vegetables, lean proteins, and whole grains.</li>
+            <li><strong>Muscle Gain:</strong> Focus on resistance training (e.g., weightlifting) with a high-protein diet and adequate calories for growth.</li>
+            <li><strong>Fat Gain:</strong> Gradual increase in calorie intake with healthy fats, whole carbs, and a mix of strength training for balanced weight distribution.</li>
+        </ul>
+        <div class="plan-images">
+            <img src="weight-loss-diet.jpg" alt="Weight Loss Diet" data-plan="weightLoss">
+            <img src="muscle-gain.jpg" alt="Muscle Gain" data-plan="muscleGain">
+            <img src="balanced-diet.jpg" alt="Balanced Diet" data-plan="balancedDiet">
+        </div>
+        <button class="btn" id="closeModal">Close</button>
+    </div>
+
+    <main>
+        <div class="site-title">FitPlan Guide</div>
+        <div class="intro">
+            <img src="fitness-banner.jpg" alt="Fitness Banner" style="width: 100%; height: auto; max-width: 800px;">
+            <h2>Welcome to Your Fitness Journey!</h2>
+            <p>On this site, you can calculate your BMI, find personalized workout plans, and receive tailored nutrition advice.</p>
+            <a href="#" class="btn" id="startButton">Start</a>
+        </div>
+
+        <div class="calculator" id="calculatorSection">
+            <h3>BMI Calculator</h3>
+            <p>Enter your details below:</p>
+            <form id="bmiForm">
+                <label for="height">Height (cm):</label>
+                <input type="number" id="height" required><br><br>
+                <label for="weight">Weight (kg):</label>
+                <input type="number" id="weight" required><br><br>
+                <button type="button" class="btn" id="calculateButton">Calculate BMI</button>
+            </form>
+            <p id="bmiResult"></p>
+        </div>
+
+        <div class="section" id="planSection">
+            <h3>Your Plan</h3>
+            <p id="planDescription"></p>
+            <div class="plan-images">
+                <img src="weight-loss.jpg" alt="Weight Loss" style="width: 300px; height: 200px;" data-plan="weightLoss">
+                <img src="muscle-gain.jpg" alt="Muscle Gain" style="width: 300px; height: 200px;" data-plan="muscleGain">
+                <img src="balanced-diet.jpg" alt="Balanced Diet" style="width: 300px; height: 200px;" data-plan="balancedDiet">
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const startButton = document.getElementById('startButton');
+        const calculatorSection = document.getElementById('calculatorSection');
+        const calculateButton = document.getElementById('calculateButton');
+        const bmiResult = document.getElementById('bmiResult');
+        const planSection = document.getElementById('planSection');
+        const planTrigger = document.getElementById('planTrigger');
+        const planModal = document.getElementById('planModal');
+        const overlay = document.getElementById('overlay');
+        const closeModal = document.getElementById('closeModal');
+        const planImages = document.querySelectorAll('.plan-images img');
+
+        const plans = {
+            weightLoss: `
+                <h3>Weight Loss Program</h3>
+                <ul>
+                    <li>Morning: 30-minute jog or cycling</li>
+                    <li>Breakfast: Oatmeal with berries and a cup of green tea</li>
+                    <li>Lunch: Grilled chicken with steamed vegetables</li>
+                    <li>Evening: 20-minute high-intensity interval training (HIIT)</li>
+                    <li>Dinner: Salmon with quinoa and a side salad</li>
+                </ul>
+            `,
+            muscleGain: `
+                <h3>Muscle Gain Program</h3>
+                <ul>
+                    <li>Morning: Protein shake followed by weightlifting</li>
+                    <li>Breakfast: Eggs, avocado toast, and a banana</li>
+                    <li>Lunch: Grilled steak with sweet potatoes and broccoli</li>
+                    <li>Evening: Strength training focusing on compound movements</li>
+                    <li>Dinner: Chicken stir-fry with rice and vegetables</li>
+                </ul>
+            `,
+            balancedDiet: `
+                <h3>Balanced Diet Program</h3>
+                <ul>
+                    <li>Morning: Yoga session and a smoothie bowl</li>
+                    <li>Breakfast: Whole-grain toast with avocado and poached eggs</li>
+                    <li>Lunch: Mixed vegetable salad with grilled tofu</li>
+                    <li>Evening: Light cardio such as swimming or brisk walking</li>
+                    <li>Dinner: Baked fish with roasted vegetables</li>
+                </ul>
+            `
+        };
+
+        startButton.addEventListener('click', () => {
+            calculatorSection.classList.add('visible');
+            document.querySelector('.intro').classList.remove('visible');
+        });
+
+        calculateButton.addEventListener('click', () => {
+            const height = parseFloat(document.getElementById('height').value) / 100;
+            const weight = parseFloat(document.getElementById('weight').value);
+
+            if (!height || !weight || height <= 0 || weight <= 0) {
+                bmiResult.textContent = 'Please enter valid values.';
+                return;
+            }
+
+            const bmi = (weight / (height * height)).toFixed(1);
+            bmiResult.textContent = `Your BMI is ${bmi}.`;
+
+            let recommendation = '';
+
+            if (bmi < 18.5) {
+                recommendation = 'Your BMI is low. We recommend focusing on healthy weight gain through balanced nutrition and strength training. Start with light exercises and include foods rich in healthy fats, proteins, and carbohydrates.';
+            } else if (bmi >= 18.5 && bmi < 24.9) {
+                recommendation = 'Your BMI is normal. What is your goal? Choose between muscle growth or maintaining fitness with customized plans.';
+            } else {
+                recommendation = 'Your BMI is high. Focus on gradual weight loss with a mix of cardio, strength training, and a calorie-controlled diet rich in vegetables, lean proteins, and whole grains.';
+            }
+
+            document.getElementById('planDescription').innerHTML = recommendation;
+            planSection.classList.add('visible');
+        });
+
+        planTrigger.addEventListener('click', () => {
+            planModal.classList.add('visible');
+            overlay.classList.add('visible');
+        });
+
+        closeModal.addEventListener('click', () => {
+            planModal.classList.remove('visible');
+            overlay.classList.remove('visible');
+        });
+
+        overlay.addEventListener('click', () => {
+            planModal.classList.remove('visible');
+            overlay.classList.remove('visible');
+        });
+
+        planImages.forEach(image => {
+            image.addEventListener('click', () => {
+                const planKey = image.dataset.plan;
+                document.getElementById('planDescription').innerHTML = plans[planKey];
+                planSection.classList.add('visible');
+                planModal.classList.remove('visible');
+                overlay.classList.remove('visible');
+            });
+        });
+    </script>
+</body>
+</html>
